@@ -1,0 +1,8 @@
+name = Filedepot multiupload
+description = Filedepot upload multiple files
+dependencies[] = filedepot
+dependencies[] = plupload
+configure = admin/config/media/filedepot
+core = 7.x
+php = 5.x;
+package = File management

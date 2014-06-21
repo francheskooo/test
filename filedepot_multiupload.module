@@ -1,0 +1,138 @@
+<?php
+
+/**
+ * Implements hook_theme_registry_alter
+ */
+function filedepot_multiupload_theme_registry_alter(&$theme_registry) {
+  $theme_registry['filedepot_main_page']['template'] = drupal_get_path('module', 'filedepot_multiupload') . '/theme/filedepot-mainpage';
+  $theme_registry['filedepot_main_page']['theme path'] = drupal_get_path('module', 'filedepot_multiupload');
+}
+
+/**
+ * Implementation of hook_menu().
+ */
+function filedepot_multiupload_menu() {
+  $items = array();
+
+  $items['filedepot/%ctools_js/multiupload'] = array(
+    'title'          => 'Add multiple files',
+    'page callback'  => 'filedepot_multiupload_dialog',
+    'page arguments' => array(1),
+    'access callback'  => 'user_access',
+    'access arguments' => array('access filedepot'),
+    'type' => MENU_NORMAL_ITEM,
+  );
+  $items['filedepot/%ctools_js/multiupload_files'] = array(
+    'title'          => 'Add multiple files',
+    'page callback'  => 'filedepot_multiupload_dialog',
+    'page arguments' => array(1),
+    'access callback'  => 'user_access',
+    'access arguments' => array('access filedepot'),
+    'type' => MENU_NORMAL_ITEM,
+  );
+  
+  $items['filedepot_multiupload_ajax'] = array(
+    'title'          => 'Filedepot multiupload',
+    'page callback'  => 'filedepot_multiupload_dispatcher',
+    'page arguments' => array(1), // Passing in wildcard which should be parm 1
+    'access callback'  => 'user_access',
+    'access arguments' => array('access filedepot'),
+    'type' => MENU_CALLBACK,
+    'file' => 'ajaxserver.php',
+  );
+  return $items;
+}
+
+function filedepot_multiupload_dialog($js = NULL) {
+  
+  ctools_add_js('common', 'filedepot_multiupload', 'js');
+  ctools_include('modal');
+  ctools_include('ajax');
+  ctools_add_js('ajax-responder');
+  drupal_add_css(drupal_get_path('module', 'filedepot') . '/css/filedepot_ctools.css');
+  drupal_add_css(drupal_get_path('module', 'filedepot_multiupload') . '/css/common.css', array('weight' => 9));
+  $form_state = array(
+    'title'            => t('New Files'),
+    'ajax'             => TRUE,
+    'has_file_element' => TRUE,
+  );
+  $output = ctools_modal_form_wrapper('filedepot_multiupload_form', $form_state);
+
+  print ajax_render($output);
+  exit;
+}
+
+function filedepot_multiupload_form($form, &$form_state) {
+  global $user;
+
+  $filedepot = filedepot_filedepot();
+
+  // Using the ctools cache functionality to save which folder the user has selected
+  ctools_include('object-cache');
+  $cid = ctools_object_cache_get('filedepot', 'folder');
+
+  module_load_include('php', 'filedepot', 'lib-common');
+
+  if ($filedepot->ogmode_enabled AND $filedepot->checkPermission($filedepot->ogrootfolder, 'admin')) {
+    $parentFolders = array($filedepot->ogrootfolder => t('Top Level Folder'));
+  }
+  else if (user_access('administer filedepot', $user)) {
+    $parentFolders = array(0 => t('Top Level Folder'));
+  }
+  else {
+    $parentFolders = array();
+  }
+  $parentFolders += filedepot_recursiveAccessArray(array('upload_dir', 'upload'));
+
+  $form['filedepot_parentfolder'] = array(
+    '#type'          => 'select',
+    '#title'         => t('Parent Folder'),
+    '#required'      => FALSE,
+    '#options'       => $parentFolders,
+    '#default_value' => $cid,
+  );
+  
+  $default_filter         = 'jpg png doc docx xls xlsx pdf ppt pptx';
+  $filter                 = variable_get('filedepot_filetype_filter', $default_filter);
+  
+  $form['filedepot_files'] = array(
+    '#type' => 'plupload',
+    '#title' => t('Upload files'),
+    '#description' => t('Add files or drag files and start upload.'),
+    '#autoupload' => TRUE,
+    '#autosubmit' => TRUE,
+    '#upload_validators' => array(
+      'file_validate_extensions' => array($filter),
+      'my_custom_file_validator' => array('some validation criteria'),
+    ),
+    '#plupload_settings' => array(
+      'runtimes' => 'html5,flash,html4',
+      'chunk_size' => '1mb',
+	  'url' => url('filedepot_multiupload_ajax/upload_files/', array('query' => array('plupload_token' => drupal_get_token('plupload_handle_uploads')))),
+    ),
+    '#event_callbacks' => array(
+	  'BeforeUpload' => 'Drupal.filedepot_multiupload.beforeUploadCallback',
+	  'StateChanged' => 'Drupal.filedepot_multiupload.stateChangedCallback',
+      'FilesAdded' => 'Drupal.filedepot_multiupload.filesAddedCallback',
+      'UploadComplete' => 'Drupal.filedepot_multiupload.uploadCompleteCallback'
+    )
+  );
+
+  $form['buttons'] = array(
+    '#prefix' => '<div style="text-align:center;">',
+    '#suffix' => '</div>',
+  );
+
+  $form['buttons']['close'] = array(
+    '#type'   => 'submit',
+    '#access' => TRUE,
+    '#value'  => t('Close'),
+    '#weight' => 60,
+    '#submit' => array('filedepot_ctools_form_cancel'), //This is the name of a function reproduced below
+  );
+
+  $form['buttons']['submit']['#submit'][]   = 'filedepot_multiupload_submit';
+  $form['buttons']['submit']['#validate'][] = 'filedepot_multiupload_validate';
+
+  return $form;
+}
