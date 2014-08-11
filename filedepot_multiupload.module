@@ -103,11 +103,9 @@ function filedepot_multiupload_form($form, &$form_state) {
     '#autosubmit' => TRUE,
     '#upload_validators' => array(
       'file_validate_extensions' => array($filter),
-      'my_custom_file_validator' => array('some validation criteria'),
     ),
     '#plupload_settings' => array(
       'runtimes' => 'html5,flash,html4',
-      'chunk_size' => '1mb',
 	  'url' => url('filedepot_multiupload_ajax/upload_files/', array('query' => array('plupload_token' => drupal_get_token('plupload_handle_uploads')))),
     ),
     '#event_callbacks' => array(
@@ -128,7 +126,7 @@ function filedepot_multiupload_form($form, &$form_state) {
     '#access' => TRUE,
     '#value'  => t('Close'),
     '#weight' => 60,
-    '#submit' => array('filedepot_ctools_form_cancel'), //This is the name of a function reproduced below
+    '#submit' => array('filedepot_ctools_form_cancel'),
   );
 
   $form['buttons']['submit']['#submit'][]   = 'filedepot_multiupload_submit';
