@@ -31,7 +31,7 @@ function filedepot_multiupload_dispatcher($action) {
         $cid_perms = $filedepot->getPermissionObject($cid);
   
         if ($cid_perms->canUpload() === FALSE) {
-          drupal_set_message(t('Insufficient priviledges to upload to this folder'), 'error');
+          drupal_set_message(t('Insufficient privileges to upload to this folder'), 'error');
           return;
         }
         watchdog("filedepot_test", var_export($cid_perms, TRUE));
