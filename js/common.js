@@ -13,7 +13,7 @@ Drupal.filedepot_multiupload.stateChangedCallback = function (up, files) {
 
 Drupal.filedepot_multiupload.beforeUploadCallback = function (up, files) {
   var parentFolder = jQuery("#edit-filedepot-parentfolder").val();
-  up.settings.url =  up.settings.url+"&cid="+parentFolder;
+  up.settings.url = up.settings.url + "&cid=" + parentFolder;
 }
 
 Drupal.filedepot_multiupload.uploadCompleteCallback = function (up, files) {

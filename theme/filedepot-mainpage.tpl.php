@@ -1,13 +1,8 @@
 <?php
-/**
-  * @file
-  * page.tpl.php
-  */
-?>
-
-<?php
-  // Initialize variable id unknown to solve any PHP Notice level error messages
-  if (!isset($search_query)) $search_query = 0;
+// Initialize variable id unknown to solve any PHP Notice level error messages.
+if (!isset($search_query)) {
+  $search_query = 0;
+}
 ?>
 
 <!-- On-Demand loading the Module Javascript using YUI Loader -->
@@ -111,20 +106,20 @@
 
       <div id="filedepottoolbar" class="filedepottoolbar" style="margin-right:0px;padding:5px;display:none;margin-bottom:1px;">
       <div style="float:left;width:350px;height:20px;padding-left:20px;">
-      <?php if ($show_newfolder == 'true') { ?>
+      <?php if ($show_newfolder == 'true'): ?>
         <span id="newfolderlink">
           <span class="first-child">
             <a class="ctools-use-modal ctools-modal-filedepot-newfolder-dialog-style" href="<?php print url('filedepot/nojs/newfolder'); ?>"><?php echo t('New Folder'); ?></a>
           </span>
         </span>
-      <?php } ?>
-      <?php if ($show_upload == 'true') { ?>
+      <?php endif; ?>
+      <?php if ($show_upload == 'true'): ?>
         <span id="newfilelink">
           <span class="first-child">
             <a class="ctools-use-modal ctools-modal-filedepot-newfile-dialog-style" href="<?php print url('filedepot/nojs/newfile'); ?>"><?php echo t('New File'); ?></a>
           </span>
         </span>
-      <?php } ?>
+      <?php endif; ?>
         <span id="multiuploadlink" class="yui-button yui-link-button">
           <span class="first-child">
             <a class="ctools-use-modal ctools-modal-filedepot-multiupload-dialog-style" href="<?php print url('filedepot/nojs/multiupload'); ?>"><?php echo t('Upload multiple'); ?></a>
