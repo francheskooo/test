@@ -1,6 +1,5 @@
 /**
  * Callbacks for plupload.
- *
  */
 
 Drupal.filedepot_multiupload = Drupal.filedepot_multiupload || {};

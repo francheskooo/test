@@ -17,7 +17,7 @@ define('PLUPLOAD_HANDLE_UPLOADS', 'plupload_handle_uploads');
  * Does the actual uploading of the file
  *
  * @param string $action
- * the action to perform
+ *   The action to perform.
  */
 function filedepot_multiupload_dispatcher($action) {
   global $user;
