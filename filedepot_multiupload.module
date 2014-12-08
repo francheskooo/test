@@ -1,4 +1,9 @@
 <?php
+/**
+ * Implementation of filedepot_multiupload module().
+ *
+ * Main module file.
+ */
 
 /**
  * Implements hook_theme_registry_alter().
