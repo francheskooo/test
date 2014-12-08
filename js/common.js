@@ -1,3 +1,8 @@
+/**
+ * Callbacks for plupload.
+ *
+ */
+
 Drupal.filedepot_multiupload = Drupal.filedepot_multiupload || {};
 
 Drupal.filedepot_multiupload.stateChangedCallback = function (up, files) {

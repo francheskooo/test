@@ -1,7 +1,7 @@
 <?php
 
 /**
- * Implementation of filedepot_multiupload_ajax()
+ * Implementation of filedepot_multiupload_ajax().
  *
  * Main ajax handler for the module
  */
@@ -12,11 +12,12 @@ ob_start();
 define('PLUPLOAD_HANDLE_UPLOADS', 'plupload_handle_uploads');
 
 /**
- * Implementation of filedepot_multiupload_dispatcher()
+ * Implementation of filedepot_multiupload_dispatcher().
  *
  * Does the actual uploading of the file
  *
- * @param string $action the action to perform
+ * @param string $action
+ * the action to perform
  */
 function filedepot_multiupload_dispatcher($action) {
   global $user;
@@ -41,7 +42,8 @@ function filedepot_multiupload_dispatcher($action) {
           return;
         }
         watchdog("filedepot_test", var_export($cid_perms, TRUE));
-        // Admin's have all perms so test for users with upload moderated approval only.
+        // Admin's have all perms so test for users with
+        // upload moderated approval only.
         if ($cid_perms->canUploadDirect() === FALSE) {
           $moderated = TRUE;
           $private_destination = 'private://filedepot/' . $node->folder . '/submissions/';
@@ -51,18 +53,20 @@ function filedepot_multiupload_dispatcher($action) {
           $private_destination = 'private://filedepot/' . $node->folder . '/';
         }
 
-        // Best to call file_prepare_directory() - even if you believe directory exists.
+        // Best to call file_prepare_directory() -
+        // even if you believe directory exists.
         file_prepare_directory($private_destination, FILE_CREATE_DIRECTORY);
 
         $file = plupload_file_uri_to_object($_FILES['file']['tmp_name']);
-		$filename = $_FILES['file']['name'];
+        $filename = $_FILES['file']['name'];
         $ext_parts = explode(".", $filename);
         $ext       = end($ext_parts);
 
         $original_filename = $filename;
         // Save record in submission table and set status to 0 -- not online.
         if ($moderated) {
-          // Generate random file name for newly submitted file to hide it until approved.
+          // Generate random file name for newly
+          // submitted file to hide it until approved.
           $charset           = "abcdefghijklmnopqrstuvwxyz";
           $moderated_tmpname = '';
           for ($i = 0; $i < 12; $i++) {
@@ -82,7 +86,8 @@ function filedepot_multiupload_dispatcher($action) {
           $file->display     = 1;
           $file->description = '';
 
-          // Doing node_save changes the file status to permanent in the file_managed table.
+          // Doing node_save changes the file status to permanent
+          // in the file_managed table.
           $node->filedepot_folder_file[LANGUAGE_NONE][] = (array) $file;
           node_save($node);
 
@@ -101,7 +106,7 @@ function filedepot_multiupload_dispatcher($action) {
             'submitter',
             'date',
             'tags',
-            'notify'
+            'notify',
           ));
           $query->values(array(
             'cid'          => $node->folder,
@@ -144,7 +149,8 @@ function filedepot_multiupload_dispatcher($action) {
           $file->display     = 1;
           $file->description = '';
 
-          // Doing node_save changes the file status to permanent in the file_managed table
+          // Doing node_save changes the file status to permanent
+          // in the file_managed table.
           $node->filedepot_folder_file[LANGUAGE_NONE][] = (array) $file;
           node_save($node);
 
@@ -165,7 +171,7 @@ function filedepot_multiupload_dispatcher($action) {
             'extension',
             'submitter',
             'status',
-            'date'
+            'date',
           ));
           $query->values(array(
             'cid'         => $node->folder,
@@ -193,7 +199,7 @@ function filedepot_multiupload_dispatcher($action) {
               'size',
               'date',
               'uid',
-              'status'
+              'status',
             ));
             $query->values(array(
               'fid'        => $newrecid,

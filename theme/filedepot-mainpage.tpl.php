@@ -1,8 +1,14 @@
 <?php
+/**
+ * Theme file for the main page.
+ *
+ * This template overrides the default from filedepot.
+ */
+
 // Initialize variable id unknown to solve any PHP Notice level error messages.
-if (!isset($search_query)) {
+if (!isset($search_query)):
   $search_query = 0;
-}
+endif;
 ?>
 
 <!-- On-Demand loading the Module Javascript using YUI Loader -->

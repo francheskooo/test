@@ -2,8 +2,8 @@
 
 /**
  * Implements hook_theme_registry_alter().
- *
  */
+
 function filedepot_multiupload_theme_registry_alter(&$theme_registry) {
   $theme_registry['filedepot_main_page']['template'] = drupal_get_path('module', 'filedepot_multiupload') . '/theme/filedepot-mainpage';
   $theme_registry['filedepot_main_page']['theme path'] = drupal_get_path('module', 'filedepot_multiupload');
@@ -44,11 +44,12 @@ function filedepot_multiupload_menu() {
 }
 
 /**
- * Implements hook_dialog()
+ * Implements hook_dialog().
  *
  * Shows the dialog for uploading multiple files.
  *
  * @param string $js
+ * Argument from hook menu.
  */
 function filedepot_multiupload_dialog($js = NULL) {
 
@@ -70,14 +71,16 @@ function filedepot_multiupload_dialog($js = NULL) {
 }
 
 /**
- * Implements hook_form()
+ * Implements hook_form().
  *
  * Shows the form for uploading multiple files.
  *
  * @param array $form
- * @param array $form_state                          
+ * The form element array.
+ * @param array $form_state
+ * The form state array.
  */
-function filedepot_multiupload_form($form, &$form_state) {
+function filedepot_multiupload_form(array $form, array &$form_state) {
   global $user;
 
   $filedepot = filedepot_filedepot();
@@ -150,4 +153,3 @@ function filedepot_multiupload_form($form, &$form_state) {
 
   return $form;
 }
-
