@@ -126,7 +126,7 @@ jQuery(window).on("dragover", function(e) {
           </span>
         </span>
       <?php endif; ?>
-      <?php if ($show_upload == 'true'): ?>
+      <?php if ($show_upload == 'true' && variable_get('filedepot_multiupload_shownewfilebutton', TRUE)): ?>
         <span id="newfilelink">
           <span class="first-child">
             <a class="ctools-use-modal ctools-modal-filedepot-newfile-dialog-style" href="<?php print url('filedepot/nojs/newfile'); ?>"><?php echo t('New File'); ?></a>
@@ -135,7 +135,9 @@ jQuery(window).on("dragover", function(e) {
       <?php endif; ?>
         <span id="multiuploadlink" class="yui-button yui-link-button">
           <span class="first-child">
-            <a class="ctools-use-modal ctools-modal-filedepot-multiupload-dialog-style" href="<?php print url('filedepot/nojs/multiupload'); ?>"><?php echo t('Upload multiple'); ?></a>
+            <a class="ctools-use-modal ctools-modal-filedepot-multiupload-dialog-style" href="<?php print url('filedepot/nojs/multiupload'); ?>">
+              <?php echo t(variable_get('filedepot_multiupload_multibuttonname')); ?>
+            </a>
           </span>
         </span>
       </div>
