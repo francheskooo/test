@@ -47,7 +47,14 @@ endif;
 <script type="text/javascript">
   var YUIBaseURL  = "<?php print $yui_base_url ?>";
 </script>
-
+<script>
+jQuery(window).on("drop", function(e) {
+  e.preventDefault();
+});
+jQuery(window).on("dragover", function(e) {
+  e.preventDefault();
+});
+</script>
 <script type="text/javascript">
    jQuery.blockUI();
    if (useYuiLoader == true) {
