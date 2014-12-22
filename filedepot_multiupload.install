@@ -1,0 +1,8 @@
+function filedepot_multiupload_install() {
+  variable_set('filedepot_multiupload_multibuttonname', 'Multiple upload');
+  variable_set('filedepot_multiupload_shownewfilebutton', TRUE);
+}
+function filedepot_multiupload_uninstall() {
+  variable_del('filedepot_multiupload_multibuttonname');
+  variable_del('filedepot_multiupload_shownewfilebutton');
+}
